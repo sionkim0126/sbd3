@@ -17,13 +17,15 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY) //번호 자동 생성 후 1씩 증가
     private Integer id;
 
-
+    //제목
     @Column(length = 200)
     private String subject;
 
+    //내용
     @Column( columnDefinition = "TEXT")
     private String content;
 
+    //작성일자(time)
     private LocalDateTime createDate;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
