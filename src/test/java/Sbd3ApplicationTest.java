@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = Sbd3Application.class)
 public class Sbd3ApplicationTest {
@@ -50,8 +51,56 @@ public class Sbd3ApplicationTest {
         if(op.isPresent()){
             Question q = op.get(); //값이 있다면 안에 있는 결과를 꺼냄
             assertEquals("Spring Booot 가 무엇인가요?", q.getSubject());
+        //결론 : finAll은 전체 객체를 가져옴 ex)'select * from question 의 실행 결과값 2' 이후 속성값이 예상과 같은지 비교한 테스트이고,
+        // findById는 'select id, content, createDate, subject from question where id = 1 ' 그 값이 있다면 꺼내어 결과 비교
         }
     }
+    @Test
+    void findBySubjectTest(){
+        Question q = this.questionRepository.findBySubject("Spring Booot 가 무엇인가요?");
+        assertEquals(1, q.getId());
+        //select id, content, createDate ,subject from question where subject = ?
+        //여기까지는 questionRepository에서 하는 일이고 우리는 여기서 ?에 'Spring Boot가 무엇인가요?'라는 값을 넣고 아이디값을 비교
+    }
+
+    @Test
+    void findBySubjectAndContentTest(){
+        Question q = this.questionRepository.findBySubjectAndContent(
+                "Spring Booot 가 무엇인가요?", "sbb에 대해 알고 싶습니다!");
+        assertEquals(1, q.getId());
+        //select id, content, createDate , subject from question where subject = ? and content = ?
+
+    }
+
+    @Test
+    void findBySubjectLikeTest(){
+        //여러개의 결과가 반환 될 가능성이 있는 경우 List사용!!
+        List<Question> questionList = this.questionRepository.findBySubjectLike("Spring%");
+        //SELECT * FROM QUESTION WHERE SUBJECT LIKE 'Spring%';
+        Question q = questionList.get(0);
+        //나온 List중 첫번째를 선택
+        assertEquals("Spring Booot 가 무엇인가요?", q.getSubject());
+    }
+
+    @Test
+    void setSubjectTest(){
+        Optional<Question> optionalQuestion = this.questionRepository.findById(1);
+        assertTrue(optionalQuestion.isPresent());
+        //assertTrue()는 괄호 안의 값이 true(참) 인지를 테스트한다.
+        //oq.isPresent()가 false를 리턴하면 오류가 발생하고 테스트가 종료된다.
+        Question q = optionalQuestion.get();
+        q.setSubject("제목 수정1");
+        this.questionRepository.save(q);
+    }
+
+    @Test
+    void deleteQuestionTest(){
+        assertEquals(2, this.questionRepository.count());
+        Optional<Question>optionalQuestion = this.questionRepository.findById(1);
+        assertTrue(optionalQuestion.isPresent());
+        Question q = optionalQuestion.get();
+        this.questionRepository.delete(q);
+        assertEquals(1, this.questionRepository.count());
+    }
+
 }
-//결론 : finAll은 전체 객체를 가져옴 ex)'select * from question 의 실행 결과값 2' 이후 속성값이 예상과 같은지 비교한 테스트이고,
-// findById는 'select id = 1 from question' 그 값이 있다면 꺼내어 결과 비교
