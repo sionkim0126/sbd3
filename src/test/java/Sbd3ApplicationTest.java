@@ -1,8 +1,11 @@
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import sbd.example.Sbd3Application;
+import sbd.example.entitys.Answer;
 import sbd.example.entitys.Question;
+import sbd.example.repository.AnsewerRepository;
 import sbd.example.repository.QuestionRepository;
 
 import java.time.LocalDateTime;
@@ -17,6 +20,9 @@ public class Sbd3ApplicationTest {
 
     @Autowired //의존성 주입으로 하여 questionrepository의 객체 주입
     public QuestionRepository questionRepository;
+
+    @Autowired
+    public AnsewerRepository ansewerRepository;
 
     @Test
     void testJpa(){
@@ -103,4 +109,48 @@ public class Sbd3ApplicationTest {
         assertEquals(1, this.questionRepository.count());
     }
 
+    @Test
+    void answerSaveTest(){
+        //questionRepository의 findById 메서드를 통해 id가 2인 질문 데이터를 가져와
+        //답변의 question 속성에 대입해 답변 데이터를 생성했다. 테스트를 수행하면 오류 없이 답변 데이터가 잘 생성될 것이다.
+        Optional<Question>op = this.questionRepository.findById(2);
+        assertTrue(op.isPresent());
+        Question q = op.get();
+
+        Answer a = new Answer();
+        a.setContent("네 자동으로 생성됩니다.");
+        a.setQuestion(q);
+        a.setCreateDate(LocalDateTime.now());
+        this.ansewerRepository.save(a);
+        //INSERT INTO answer (content, create_date, question_id)
+        //VALUES ('네 자동으로 생성됩니다.', CURRENT_TIMESTAMP, 2);
+    }
+
+    @Test
+    void a_findByIdTest(){
+        //1.optionalAnswer.get() → Answer 객체를 가져옴
+        Optional<Answer>optionalAnswer = this.ansewerRepository.findById(1);
+        assertTrue(optionalAnswer.isPresent());
+        Answer a = optionalAnswer.get();
+        //2.a.getQuestion() → Answer 객체와 연결된 Question 객체를 가져옴
+        assertEquals(2, a.getQuestion().getId());
+        //3.a.getQuestion().getId() → Question 객체의 ID를 가져옴
+    }
+
+    @Test
+    @Transactional //메서드가 종료될 때까지 DB 세션이 유지된다.
+    void findAnswerByQuestionTest(){
+        Optional<Question>op = this.questionRepository.findById(2);
+        assertTrue(op.isPresent());
+        Question q = op.get();
+
+        List<Answer> answerList = q.getAnswerList();
+
+        assertEquals(1, answerList.size());
+        assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
+        //SELECT a.*
+        //FROM answer a
+        //JOIN question q ON a.question_id = q.id
+        //WHERE q.id = 2;
+    }
 }

@@ -30,4 +30,11 @@ public class Question {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
+
+    //CREATE TABLE question (
+    //    id IDENTITY PRIMARY KEY,  -- 자동 증가하는 기본 키
+    //    subject VARCHAR(200),  -- 제목 (최대 200자)
+    //    content TEXT,  -- 내용 (긴 글 가능)
+    //    create_date TIMESTAMP  -- 작성일자
+    //);
 }
