@@ -25,6 +25,11 @@ dependencies {
 
     // Spring Data JPA: JPA와 Hibernate 사용을 위한 기본 의존성
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    //Thymeleaf 템플릿 엔진을 사용할 수 있도록 지원하는 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    //Thymeleaf에서 레이아웃을 쉽게 구성할 수 있도록 도와주는 라이브러리
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 }
 
 test {
