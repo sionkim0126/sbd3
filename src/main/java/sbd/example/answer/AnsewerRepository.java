@@ -1,7 +1,6 @@
-package sbd.example.repository;
+package sbd.example.answer;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import sbd.example.entitys.Answer;
 
 public interface AnsewerRepository extends JpaRepository<Answer, Integer> {
 

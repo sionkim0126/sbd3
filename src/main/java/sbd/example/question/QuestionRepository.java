@@ -1,7 +1,6 @@
-package sbd.example.repository;
+package sbd.example.question;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import sbd.example.entitys.Question;
 
 import java.util.List;
 

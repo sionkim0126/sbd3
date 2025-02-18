@@ -3,10 +3,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import sbd.example.Sbd3Application;
-import sbd.example.entitys.Answer;
-import sbd.example.entitys.Question;
-import sbd.example.repository.AnsewerRepository;
-import sbd.example.repository.QuestionRepository;
+import sbd.example.answer.Answer;
+import sbd.example.question.Question;
+import sbd.example.answer.AnsewerRepository;
+import sbd.example.question.QuestionRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,8 +1,9 @@
-package sbd.example.entitys;
+package sbd.example.question;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import sbd.example.answer.Answer;
 
 import java.time.LocalDateTime;
 import java.util.List;

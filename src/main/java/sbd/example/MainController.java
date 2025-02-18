@@ -1,4 +1,4 @@
-package sbd.example.controller;
+package sbd.example;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
