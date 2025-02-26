@@ -1,12 +1,12 @@
 package sbd.example.question;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+
 import java.util.List;
 
 @RequestMapping("/question")
@@ -35,4 +35,29 @@ public class QuestionController {
         model.addAttribute("question", question);
         return "question_detail";
     }
+
+    @GetMapping("/create")
+    public String questionCreate(QuestionForm questionForm) {
+        // 빈 폼 객체를 템플릿에 전달
+        return "question_form";  // question_form.html을 보여줌
+    }
+
+    @PostMapping("/create")
+    public String questionCreate(/*데이터 유효성 검사를 하기 전 그냥 진행했던 단계
+                                 @RequestParam(value = "subject") String subject,
+                                 @RequestParam(value = "content") String content*/
+            @Valid QuestionForm questionForm, BindingResult bindingResult){
+        /*데이터 유효성 검사를 하기 전 그냥 진행했던 단계
+        this.questionService.create(subject, content);*/
+        if( bindingResult.hasErrors()){
+            return "question_form";
+        }
+        this.questionService.create(questionForm.getSubject(), questionForm.getContent());
+        return "redirect:/question/list";
+    }
+        /*GET 요청 시: 빈 QuestionForm 객체가 폼에 전달되어야,
+     입력 필드에 바인딩이 가능하고, 폼을 제대로 렌더링할 수 있어요.
+
+    POST 요청 시: 사용자가 입력한 데이터를 서버로 보내면, 유효성 검사를 진행하고,
+     유효성 오류가 있으면 다시 폼을 띄우고, 오류 메시지를 표시해줘요.*/
 }
