@@ -2,6 +2,7 @@ package sbd.example.question;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +21,20 @@ public class QuestionController {
     private final QuestionService questionService;  // 의존성 주입 (Service를 통해 비즈니스 로직 처리)
 
     @GetMapping("/list")
-    public String list(Model model) {
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0")int page) {
         // questionService를 통해 질문 목록 데이터를 가져옴
-        List<Question> questionList = this.questionService.getList();
+        /*List<Question> questionList = this.questionService.getList();*/
 
         // Model 객체를 사용해 데이터를 뷰(HTML)로 전달
-        model.addAttribute("questionList", questionList);
+        /*model.addAttribute("questionList", questionList);*/
 
+        /*위는 페이징기능 없이 조회 후 전달하는 기능 아래는 페이징 기능 추가 하여 조회*/
+        Page<Question>paging = this.questionService.getList(page);
+        model.addAttribute("paging", paging);
         return "question_list";
         //컨트롤러 → 서비스 → 리포지터리 순서로 접근하는 과정을 거쳐 데이터를 처리할 것이다.
     }
+
     @GetMapping(value = "/detail/{id}")
     public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
         Question question = this.questionService.getQuestion(id);

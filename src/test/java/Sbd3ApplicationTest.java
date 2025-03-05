@@ -7,6 +7,7 @@ import sbd.example.answer.Answer;
 import sbd.example.question.Question;
 import sbd.example.answer.AnsewerRepository;
 import sbd.example.question.QuestionRepository;
+import sbd.example.question.QuestionService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +24,9 @@ public class Sbd3ApplicationTest {
 
     @Autowired
     public AnsewerRepository ansewerRepository;
+
+    @Autowired
+    public QuestionService questionService;
 
     @Test
     void testJpa(){
@@ -152,5 +156,13 @@ public class Sbd3ApplicationTest {
         //FROM answer a
         //JOIN question q ON a.question_id = q.id
         //WHERE q.id = 2;
+    }
+    @Test
+    void testdata(){
+        for (int i= 1; i <= 300; i++){
+            String subject = String.format("테스트 데이터 입니다 :[%03d]", i);
+            String content = "내용 없음";
+            this.questionService.create(subject, content);
+        }
     }
 }
