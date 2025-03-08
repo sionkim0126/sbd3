@@ -33,9 +33,13 @@ public class UserController {
         try {
             userService.create(userCreateForm.getUsername(),
                     userCreateForm.getEmail(), userCreateForm.getPassword1());
-        }catch (DataIntegrityViolationException e){
-            e.printStackTrace();
-            bindingResult.reject("signupFailed","이미등록된 정보입니다.");
+        }catch (IllegalStateException e){
+            if (e.getMessage().equals("이미 등록된 아이디 입니다.")){
+                bindingResult.rejectValue("username", "duplicateUsername", e.getMessage());
+            }
+            else if (e.getMessage().equals("이미 등록된 이메일 입니다.")){
+                bindingResult.rejectValue("email","duplicateEmail", e.getMessage());
+            }
             return "signup_form";
         }
         return "redirect:/";
