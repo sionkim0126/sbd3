@@ -165,9 +165,10 @@ public class Sbd3ApplicationTest {
     }
     @Test
     void testdata(){
-        for (int i= 1; i <= 300; i++){
+        for (int i= 1; i <= 1; i++){
             String subject = String.format("테스트 데이터 입니다 :[%03d]", i);
-            String content = "내용 없음";
+            String content = "직접 수정한 test코드 확인 차 등록\n" +
+                    "잘 등록했다면 글쓴이는 'test1'";
             SiteUser siteUser = userService.getUser("test1");
             this.questionService.create(subject, content, siteUser);
         }
