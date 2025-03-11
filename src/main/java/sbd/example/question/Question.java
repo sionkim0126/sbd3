@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import sbd.example.answer.Answer;
+import sbd.example.user.SiteUser;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,13 +30,25 @@ public class Question {
     //작성일자(time)
     private LocalDateTime createDate;
 
+
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    //@OneToMany: "하나의 엔티티가 여러 개의 엔티티를 가질 수 있는 관계"
     private List<Answer> answerList;
 
+    @ManyToOne
+    //@ManyToOne: "여러 개의 엔티티가 하나의 엔티티와 연결되는 관계"
+    private SiteUser author;
+
+    //@OneToMany와 @ManyToOne은 반대 개념이며, 데이터베이스에서는 외래 키(Foreign Key)로 표현됩니다.
+    //즉 question 테이블의 site_user_id 필드는 site_user의 id를 참조.
+
     //CREATE TABLE question (
-    //    id IDENTITY PRIMARY KEY,  -- 자동 증가하는 기본 키
-    //    subject VARCHAR(200),  -- 제목 (최대 200자)
-    //    content TEXT,  -- 내용 (긴 글 가능)
-    //    create_date TIMESTAMP  -- 작성일자
+    //    id BIGINT AUTO_INCREMENT PRIMARY KEY,    -- 기본 키 (PK), 자동 증가
+    //    subject VARCHAR(200) NOT NULL,          -- 제목 (최대 200자)
+    //    content TEXT NOT NULL,                  -- 내용 (TEXT 타입)
+    //    create_date DATETIME NOT NULL,          -- 생성일 (LocalDateTime)
+    //
+    //    site_user_id BIGINT,                     -- 외래 키 (FK) (SiteUser 참조)
+    //    FOREIGN KEY (site_user_id) REFERENCES site_user(id) ON DELETE CASCADE
     //);
 }

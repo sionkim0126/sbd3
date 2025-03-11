@@ -8,7 +8,10 @@ import sbd.example.question.Question;
 import sbd.example.answer.AnsewerRepository;
 import sbd.example.question.QuestionRepository;
 import sbd.example.question.QuestionService;
+import sbd.example.user.SiteUser;
+import sbd.example.user.UserService;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +30,9 @@ public class Sbd3ApplicationTest {
 
     @Autowired
     public QuestionService questionService;
+
+    @Autowired
+    public UserService userService;
 
     @Test
     void testJpa(){
@@ -162,7 +168,8 @@ public class Sbd3ApplicationTest {
         for (int i= 1; i <= 300; i++){
             String subject = String.format("테스트 데이터 입니다 :[%03d]", i);
             String content = "내용 없음";
-            this.questionService.create(subject, content);
+            SiteUser siteUser = userService.getUser("test1");
+            this.questionService.create(subject, content, siteUser);
         }
     }
 }

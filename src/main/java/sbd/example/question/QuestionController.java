@@ -3,13 +3,17 @@ package sbd.example.question;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import sbd.example.answer.AnswerForm;
+import sbd.example.user.SiteUser;
+import sbd.example.user.UserService;
 
-import java.util.List;
+import java.security.Principal;
+
 
 @RequestMapping("/question")
 //앞으로 QuestionController.java에서 URL을 매핑할 때 반드시 /question으로 시작한다는 것을 기억해 두자.
@@ -18,7 +22,8 @@ import java.util.List;
 public class QuestionController {
 
     // private final QuestionRepository questionRepository;
-    private final QuestionService questionService;  // 의존성 주입 (Service를 통해 비즈니스 로직 처리)
+    private final QuestionService questionService; // 의존성 주입 (Service를 통해 비즈니스 로직 처리)
+    private final UserService userService;
 
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0")int page) {
@@ -42,23 +47,25 @@ public class QuestionController {
         return "question_detail";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String questionCreate(QuestionForm questionForm) {
         // 빈 폼 객체를 템플릿에 전달
         return "question_form";  // question_form.html을 보여줌
     }
-
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public String questionCreate(/*데이터 유효성 검사를 하기 전 그냥 진행했던 단계
                                  @RequestParam(value = "subject") String subject,
                                  @RequestParam(value = "content") String content*/
-            @Valid QuestionForm questionForm, BindingResult bindingResult){
+            @Valid QuestionForm questionForm, BindingResult bindingResult , Principal principal){
         /*데이터 유효성 검사를 하기 전 그냥 진행했던 단계
         this.questionService.create(subject, content);*/
         if( bindingResult.hasErrors()){
             return "question_form";
         }
-        this.questionService.create(questionForm.getSubject(), questionForm.getContent());
+        SiteUser siteUser = userService.getUser(principal.getName());
+        this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
         return "redirect:/question/list";
     }
         /*GET 요청 시: 빈 QuestionForm 객체가 폼에 전달되어야,
