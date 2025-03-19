@@ -30,6 +30,8 @@ public class Question {
     //작성일자(time)
     private LocalDateTime createDate;
 
+    //수정일자(time)
+    private LocalDateTime modifyDate;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     //@OneToMany: "하나의 엔티티가 여러 개의 엔티티를 가질 수 있는 관계"
