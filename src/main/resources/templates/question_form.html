@@ -8,8 +8,12 @@
 <body>
 <div layout:fragment="content" class="container">
     <h5 class="my-3 border-bottom pb-2">질문등록</h5>
-
-    <form th:action="@{/question/create}" th:object="${questionForm}" method="post">
+    <!--Spring Security는 CSRF 공격을 방지하기 위해 요청마다 고유한 토큰을 생성합니다.-->
+    <!--이 토큰은 폼 데이터와 함께 서버로 전송되며, 서버는 전달된 토큰의 유효성을 검사합니다.-->
+    <form th:object="${questionForm}" method="post">
+        <!--객체와 바인딩된 데이터를 처리합니다 controller에서 get으로 온 작업을 post 처리한다-->
+        <!--결론은 Spring에서는 같은 이름의 템플릿()을 여러 컨텍스트에서 재활용할 수 있습니다.-->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <div th:replace="~{form_errors :: formErrorsFragment}"></div>
         <div class="mb-3">
             <label for="subject" class="form-label">제목</label>

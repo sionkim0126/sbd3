@@ -50,11 +50,19 @@ public class QuestionService {
 
         Pageable pageable  = PageRequest.of(page, 10, Sort.by(sorts));
         return this.questionRepository.findAll(pageable);
-    }
+
     //위 방법은 여러 조건을 추가로 달기 용의하다 아래방법은 역순으로 조회 만 설정한 코딩방법이다
     //위는 ArrayList로 하여 List에 역순 설정을 적용한 방법이다 추가 설정도 가능하다
     /*public Page<Question> getListEx(int page) {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createDate"));
         return this.questionRepository.findAll(pageable);
     }*/
+    }
+
+    public void modify(Question question, String subject, String content) {
+        question.setSubject(subject);
+        question.setContent(content);
+        question.setModifyDate(LocalDateTime.now());
+        this.questionRepository.save(question);
+    }
 }
