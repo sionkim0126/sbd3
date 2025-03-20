@@ -21,7 +21,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // H2 데이터베이스
-    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.h2database:h2:2.1.214'
 
     // Spring Data JPA: JPA와 Hibernate 사용을 위한 기본 의존성
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
