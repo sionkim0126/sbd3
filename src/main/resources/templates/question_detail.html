@@ -24,15 +24,21 @@
                     <!--[수정] 버튼이 로그인한 사용자와 글쓴이가 동일할 경우에만 노출되도록
                      #authentication.getPrincipal().getUsername() == question.author.username을 적용했다-->
             <div class="my-3">
-                <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+                <!--03.25 13:52 삭제버튼 작업 중 혼동을 막기위해 수정버튼을 잠시 주석 처리-->
+              <!--  <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
                    th:data-uri="@{|/question/vote/${question.id}|}">
                     추천
                     <span class="badge rounded-pill bg-success" th:text="${#lists.size(question.voter)}"></span>
-                </a>
+                </a>-->
                 <a th:href="@{|/question/modify/${question.id}|}" class="btn btn-sm btn-outline-secondary"
                    sec:authorize="isAuthenticated()"
                    th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
                    th:text="수정"></a>
+                <!--th:data-url는 버튼 클릭 시 삭제 요청을 처리할 URL 경로를 동적으로 생성 및 제공하기 위한 속성으로 사용됩니다.-->
+                <a href="javascript:void(0);" th:data-uri="@{|/question/delete/${question.id}|}"
+                   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+                   th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
+                   th:text="삭제"></a>
             </div>
         </div>
     </div>
@@ -63,5 +69,15 @@ Answer 목록도 자동으로 포함되어서 question.answerList로 접근할 �
         <input type="submit" value="답변등록" class="btn btn-primary my-2">
     </form>
 </div>
+<script layout:fragment="script" type='text/javascript'>
+    const delete_elements = document.getElementsByClassName("delete");
+    Array.from(delete_elements).forEach(function(element) {
+        element.addEventListener('click', function() {
+            if(confirm("정말로 삭제하시겠습니까?")) {
+                location.href = this.dataset.uri;
+            };
+        });
+    });
+</script>
 </body>
 </html>
