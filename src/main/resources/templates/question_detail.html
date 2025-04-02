@@ -24,12 +24,11 @@
                     <!--[수정] 버튼이 로그인한 사용자와 글쓴이가 동일할 경우에만 노출되도록
                      #authentication.getPrincipal().getUsername() == question.author.username을 적용했다-->
             <div class="my-3">
-                <!--03.25 13:52 삭제버튼 작업 중 혼동을 막기위해 수정버튼을 잠시 주석 처리-->
-              <!--  <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+                <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
                    th:data-uri="@{|/question/vote/${question.id}|}">
                     추천
                     <span class="badge rounded-pill bg-success" th:text="${#lists.size(question.voter)}"></span>
-                </a>-->
+                </a>
                 <a th:href="@{|/question/modify/${question.id}|}" class="btn btn-sm btn-outline-secondary"
                    sec:authorize="isAuthenticated()"
                    th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
@@ -78,6 +77,14 @@ Answer 목록도 자동으로 포함되어서 question.answerList로 접근할 �
             };
         });
     });
+    const recommend_elements = document.getElementsByClassName("recommend");
+Array.from(recommend_elements).forEach(function(element) {
+    element.addEventListener('click', function() {
+        if(confirm("정말로 추천하시겠습니까?")) {
+            location.href = this.dataset.uri;
+        };
+    });
+});
 </script>
 </body>
 </html>
